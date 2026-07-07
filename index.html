@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Adi ♥ Devanshi</title>
+
+<!-- iPhone "Add to Home Screen" app behaviour -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Adi ♥ Devanshi">
+<meta name="theme-color" content="#F6F2F7">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" type="image/png" href="icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+:root{
+  --paper:#F6F2F7;        /* soft lilac-white background */
+  --card:#FFFFFF;
+  --ink:#33243C;          /* deep plum text */
+  --ink-soft:#7A6C84;
+  --line:#E6DFEA;
+  --adi:#2F6E68;          /* Adi: deep teal */
+  --adi-soft:#E3F0EE;
+  --dev:#C05C77;          /* Devanshi: rose */
+  --dev-soft:#F9E9EE;
+  --us:#C98A2B;           /* Us: marigold */
+  --us-soft:#FAF0DE;
+  --accent:var(--us);
+  --accent-soft:var(--us-soft);
+  --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'Karla',system-ui,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  padding:max(16px,env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+  max-width:560px;margin:0 auto;
+  font-size:16px;line-height:1.45;
+}
+h1,h2,.serif{font-family:'Instrument Serif',serif;font-weight:400}
+
+/* ---------- header ---------- */
+header{text-align:center;margin:8px 0 18px}
+header h1{font-size:34px;letter-spacing:.5px}
+header h1 em{font-style:italic}
+header h1 .amp{color:var(--dev);font-style:italic;padding:0 4px}
+.thread{width:120px;height:10px;margin:2px auto 0;display:block}
+.tagline{color:var(--ink-soft);font-size:13px;margin-top:2px}
+#saveState{font-size:12px;color:var(--ink-soft);margin-top:6px;min-height:16px;transition:color .3s}
+#saveState.saving{color:var(--us)}
+#saveState.saved{color:var(--adi)}
+#saveState.error{color:#B3423A}
+
+/* ---------- sign-in card ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.center{text-align:center}
+button{font-family:inherit;font-size:15px;font-weight:600;border:none;border-radius:12px;cursor:pointer}
+.btn-primary{background:var(--ink);color:var(--paper);padding:13px 22px;width:100%}
+.btn-primary:active{opacity:.85}
+.btn-quiet{background:var(--card);border:1px solid var(--line);color:var(--ink);font-size:13px;font-weight:600;padding:9px 14px;border-radius:999px;text-decoration:none}
+.setup-warn{background:var(--dev-soft);border:1px solid var(--dev);border-radius:var(--radius);padding:16px;font-size:14px;margin-bottom:16px}
+.setup-warn code{background:#fff;padding:2px 6px;border-radius:6px;font-size:13px;word-break:break-all}
+
+/* ---------- person tabs ---------- */
+.people{display:flex;gap:8px;margin-bottom:14px}
+.people button{
+  flex:1;padding:12px 4px;border-radius:999px;background:var(--card);
+  border:1.5px solid var(--line);color:var(--ink-soft);font-weight:600;font-size:15px;
+  transition:all .18s;
+}
+.people button.active[data-p="adi"]{background:var(--adi);border-color:var(--adi);color:#fff}
+.people button.active[data-p="devanshi"]{background:var(--dev);border-color:var(--dev);color:#fff}
+.people button.active[data-p="us"]{background:var(--us);border-color:var(--us);color:#fff}
+
+/* ---------- tracker tabs ---------- */
+.trackers{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:4px;scrollbar-width:none}
+.trackers::-webkit-scrollbar{display:none}
+.trackers button{
+  white-space:nowrap;padding:8px 14px;border-radius:10px;font-size:14px;font-weight:600;
+  background:none;border:1px solid transparent;color:var(--ink-soft);
+}
+.trackers button.active{background:var(--accent-soft);color:var(--ink);border-color:var(--accent)}
+
+/* ---------- panel ---------- */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;min-height:220px}
+.panel h2{font-size:24px;margin-bottom:2px}
+.panel .sub{color:var(--ink-soft);font-size:13px;margin-bottom:14px}
+form.addrow{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.addrow .row2{display:flex;gap:8px}
+.addrow .row2 > *{flex:1;min-width:0}
+input,select{
+  font-family:inherit;font-size:15px;padding:11px 12px;border:1px solid var(--line);
+  border-radius:10px;background:var(--paper);color:var(--ink);width:100%;
+}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.addrow button{background:var(--accent);color:#fff;padding:11px;border-radius:10px}
+ul.items{list-style:none}
+ul.items li{
+  display:flex;align-items:center;gap:10px;padding:11px 2px;
+  border-bottom:1px dashed var(--line);font-size:15px;
+}
+ul.items li:last-child{border-bottom:none}
+.item-main{flex:1;min-width:0}
+.item-main .t{font-weight:600;word-break:break-word}
+.item-main .m{color:var(--ink-soft);font-size:13px}
+.del{background:none;color:var(--ink-soft);font-size:18px;padding:4px 8px;line-height:1}
+.del:active{color:#B3423A}
+.empty{color:var(--ink-soft);font-size:14px;text-align:center;padding:28px 8px}
+.total{background:var(--accent-soft);border-radius:10px;padding:10px 14px;font-weight:700;margin-bottom:14px;display:flex;justify-content:space-between}
+.stars{color:var(--us);letter-spacing:2px}
+.badge{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--ink)}
+a.doclink{color:var(--adi);font-weight:600;text-decoration:none;word-break:break-word}
+.hint{font-size:12px;color:var(--ink-soft);margin-top:6px}
+.hidden{display:none!important}
+/* movies: segmented status, filter chips, search suggestions, posters, bulk */
+.seg{display:flex;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px;margin-bottom:10px}
+.seg button{flex:1;padding:8px;border-radius:8px;background:none;color:var(--ink-soft);font-size:14px;font-weight:600}
+.seg button.active{background:var(--accent);color:#fff}
+.chips{display:flex;gap:6px;overflow-x:auto;margin:0 0 12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips button{white-space:nowrap;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft)}
+.chips button.active{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.sugbox{position:relative}
+.suglist{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 26px rgba(51,36,60,.14);z-index:20;max-height:320px;overflow-y:auto}
+.suglist button{display:flex;gap:10px;align-items:center;width:100%;padding:9px 12px;background:none;text-align:left;font-weight:500;font-size:14px;border-bottom:1px solid var(--line);color:var(--ink)}
+.suglist button:last-child{border-bottom:none}
+.suglist img{width:32px;height:48px;object-fit:cover;border-radius:6px;background:var(--paper);flex:none}
+.suglist .y{color:var(--ink-soft);font-size:12px}
+.poster{width:38px;height:57px;object-fit:cover;border-radius:8px;background:var(--accent-soft);flex:none;display:inline-block}
+.starbtn{background:none;padding:2px 4px 2px 0;font-size:15px;letter-spacing:2px;color:var(--us)}
+.linky{background:none;color:var(--accent);font-size:13px;font-weight:600;text-decoration:underline;padding:6px 0;display:block;margin:0 auto 8px}
+.markw{background:var(--accent-soft);color:var(--ink);font-size:12px;font-weight:700;padding:6px 9px;border-radius:8px;flex:none}
+textarea{font-family:inherit;font-size:15px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);width:100%;min-height:96px;resize:vertical}
+textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+/* movies: shelves, poster cards, detail sheet */
+.shelf{margin-bottom:18px}
+.shelf h3{font-size:15px;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:baseline}
+.shelf h3 .cnt{font-size:12px;color:var(--ink-soft);font-weight:600}
+.shelf .prow{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.shelf .prow::-webkit-scrollbar{display:none}
+.pcard{flex:none;width:96px;background:none;text-align:left;padding:0}
+.pcard img{width:96px;height:144px;object-fit:cover;border-radius:10px;background:var(--accent-soft);display:block}
+.pcard .noimg{width:96px;height:144px;border-radius:10px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;font-weight:600;font-size:12px;color:var(--ink)}
+.pcard .pt{font-size:12px;font-weight:600;margin-top:5px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pcard .ps{font-size:11px;color:var(--us);letter-spacing:1px;display:block}
+.overlay{position:fixed;inset:0;background:rgba(51,36,60,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;padding:20px 16px calc(20px + env(safe-area-inset-bottom))}
+.sheet .top{display:flex;gap:14px;margin-bottom:12px}
+.sheet img.big{width:110px;height:165px;object-fit:cover;border-radius:12px;flex:none;background:var(--accent-soft)}
+.gchip{display:inline-block;font-size:12px;font-weight:600;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px 10px;margin:0 6px 6px 0}
+.sheet textarea{margin-top:8px;min-height:76px}
+.sheet .actions{display:flex;gap:8px;margin-top:12px}
+.sheet .actions button{flex:1;padding:12px;border-radius:10px;font-weight:600}
+/* wishlist, celebrations, meal plan */
+.pri-High{background:var(--dev-soft);color:#8F3050}
+.pri-Medium{background:var(--us-soft);color:#7A5A16}
+.pri-Low{background:var(--adi-soft);color:#24544F}
+li.done .t{text-decoration:line-through;color:var(--ink-soft)}
+.badge.soon{background:var(--dev);color:#fff}
+.chk{background:var(--paper);border:1.5px solid var(--line);border-radius:8px;width:26px;height:26px;flex:none;font-size:14px;color:#fff;line-height:1}
+.chk.on{background:var(--adi);border-color:var(--adi)}
+.daynav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.daynav button{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 16px;font-size:17px;color:var(--ink)}
+.daynav .dlabel{flex:1;text-align:center;font-weight:700}
+.mgroup{margin-bottom:10px}
+.mgroup h3{font-size:13px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+/* hub, stats, bars */
+.hcard{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+.hl{font-size:12px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat .n{font-size:21px;font-weight:700}
+.stat .l{font-size:12px;color:var(--ink-soft)}
+.sh{font-size:15px;font-weight:700;margin:14px 0 8px;font-family:'Karla',sans-serif}
+.barrow{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:6px}
+.barlab{width:82px;flex:none;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bartrack{flex:1;height:10px;background:var(--paper);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.barfill{display:block;height:100%;background:var(--accent)}
+.barval{width:76px;flex:none;text-align:right;color:var(--ink-soft);font-weight:600}
+.bdel{background:var(--dev-soft);color:var(--dev)}
+.bghost{background:var(--paper);border:1px solid var(--line);color:var(--ink)}
+
+/* ---------- dark mode (manual toggle) ---------- */
+body.dark{
+  --paper:#191221;--card:#241A2E;--ink:#F0E9F4;--ink-soft:#A795B5;--line:#3B2E49;
+  --adi:#53B0A6;--adi-soft:#1B3330;--dev:#E27E93;--dev-soft:#3B2130;--us:#E2A94F;--us-soft:#3A2D15;
+}
+body.dark .overlay{background:rgba(0,0,0,.6)}
+body.dark .suglist{box-shadow:0 10px 26px rgba(0,0,0,.5)}
+body.dark{color-scheme:dark}
+body.dark .pri-High{color:#F2A5B9}body.dark .pri-Medium{color:#EFCB8B}body.dark .pri-Low{color:#96D6CC}
+/* star picker + inline chips */
+.starrow{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+.stb{background:none;font-size:24px;line-height:1;color:var(--line);padding:2px 3px}
+.stb.on{color:var(--us)}
+.chip{white-space:nowrap;padding:7px 12px;border-radius:999px;font-size:13px;font-weight:600;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);margin-left:6px}
+.chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+/* undo bar + editing highlight */
+#undoBar{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translate(-50%,90px);background:var(--ink);color:var(--paper);padding:11px 16px;border-radius:14px;display:flex;gap:16px;align-items:center;z-index:70;transition:transform .3s ease;box-shadow:0 8px 24px rgba(0,0,0,.25);font-size:14px;max-width:92vw}
+#undoBar.show{transform:translate(-50%,0)}
+#undoBar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#undoBar button{background:none;color:var(--us);font-weight:700;font-size:14px;flex:none}
+li.editing{background:var(--accent-soft);border-radius:10px;padding-left:8px;padding-right:4px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+footer{display:flex;gap:8px;justify-content:center;margin-top:18px}
+
+/* ---------- splash screen ---------- */
+#splash{position:fixed;inset:0;background:var(--paper);z-index:100;display:flex;align-items:center;justify-content:center;transition:opacity .5s ease}
+#splash.hide{opacity:0;pointer-events:none}
+.sp-inner{text-align:center;animation:spIn .7s ease both}
+.sp-names{font-family:'Instrument Serif',serif;font-size:38px;color:var(--ink)}
+.sp-names em{font-style:italic}
+.sp-heart{color:var(--dev);padding:0 6px;display:inline-block;animation:spBeat 1.1s ease .35s}
+.sp-thread{width:130px;height:11px;display:block;margin:4px auto 0}
+.sp-thread path{stroke-dasharray:140;stroke-dashoffset:140;animation:spDraw .9s ease .45s forwards}
+.sp-tag{color:var(--ink-soft);font-size:13px;margin-top:6px;opacity:0;animation:spFade .5s ease .9s forwards}
+@keyframes spIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes spBeat{0%,100%{transform:scale(1)}25%{transform:scale(1.35)}45%{transform:scale(1)}65%{transform:scale(1.2)}}
+@keyframes spDraw{to{stroke-dashoffset:0}}
+@keyframes spFade{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){
+  .sp-inner,.sp-heart,.sp-tag{animation:none;opacity:1}
+  .sp-thread path{animation:none;stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<div id="splash" aria-hidden="true">
+  <div class="sp-inner">
+    <div class="sp-names"><em>Adi</em><span class="sp-heart">♥</span><em>Devanshi</em></div>
+    <svg class="sp-thread" viewBox="0 0 120 10">
+      <path d="M2 5 C 30 -2, 50 12, 60 5 S 95 -2, 118 5" fill="none" stroke="#C05C77" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <div class="sp-tag">our little life, kept together</div>
+  </div>
+</div>
+
+<header>
+  <h1><em id="nameA">Adi</em><span class="amp">♥</span><em id="nameB">Devanshi</em></h1>
+  <svg class="thread" viewBox="0 0 120 10" aria-hidden="true">
+    <path d="M2 5 C 30 -2, 50 12, 60 5 S 95 -2, 118 5" fill="none" stroke="#C05C77" stroke-width="1.6" stroke-linecap="round"/>
+  </svg>
+  <div class="tagline">our little life, kept together</div>
+  <div id="saveState"></div>
+</header>
+
+<!-- Shown if CLIENT_ID has not been filled in yet -->
+<div id="setupWarn" class="setup-warn hidden">
+  <strong>One step left:</strong> open this file in a text editor and paste your Google
+  <em>OAuth Client ID</em> into the <code>CLIENT_ID</code> line near the bottom
+  (it looks like <code>1234…apps.googleusercontent.com</code>). The setup steps are in the chat where you got this file.
+</div>
+
+<div id="offBanner" class="setup-warn hidden" style="background:var(--us-soft);border-color:var(--us)">
+  📴 Showing your last saved copy — sign in above to sync and make changes.
+</div>
+
+<!-- Sign-in view -->
+<div id="authView" class="card center">
+  <h2 class="serif" style="font-size:22px;margin-bottom:6px">Sign in to open your book</h2>
+  <p style="color:var(--ink-soft);font-size:14px;margin-bottom:16px">
+    Everything is saved privately in your own Google Drive — movies, meals, money, travels and documents.
+  </p>
+  <button class="btn-primary" id="signInBtn">Sign in with Google</button>
+</div>
+
+<!-- Main app -->
+<div id="appView" class="hidden">
+  <div class="people" role="tablist" aria-label="Whose section">
+    <button data-p="home" role="tab">Home</button>
+    <button data-p="adi" role="tab">Adi</button>
+    <button data-p="devanshi" role="tab">Devanshi</button>
+    <button data-p="us" class="active" role="tab">Us</button>
+  </div>
+
+  <div class="trackers" role="tablist" aria-label="Tracker">
+    <button data-t="movies" class="active">Movies</button>
+    <button data-t="meals">Meals</button>
+    <button data-t="mealplan">Meal plan</button>
+    <button data-t="finance">Finance</button>
+    <button data-t="foods">Foods tried</button>
+    <button data-t="travel">Travel</button>
+    <button data-t="grocery">Grocery</button>
+    <button data-t="wishlist">Wishlist</button>
+    <button data-t="celebrations">Celebrations</button>
+    <button data-t="stats">Stats</button>
+    <button data-t="docs">Documents</button>
+  </div>
+
+  <div class="panel" id="panel"></div>
+
+  <footer>
+    <button class="btn-quiet" id="themeBtn">🌙 Dark</button>
+    <button class="btn-quiet" id="backupBtn">⬇️ Backup</button>
+    <button class="btn-quiet" id="signOutBtn">Sign out</button>
+  </footer>
+</div>
+
+<div id="undoBar"><span id="undoLabel"></span><button id="undoBtn">Undo</button></div>
+
+<script>
+/* =========================================================================
+   ADI ♥ DEVANSHI — a two-person life tracker stored in your own Google Drive
+   =========================================================================
+
+   ▸ PASTE YOUR CLIENT ID BELOW (from Google Cloud Console → Credentials).
+   ▸ Full setup steps are in the chat message that came with this file.
+*/
+const CLIENT_ID = "772327278030-eqeagbun2bnmtiev2r0p76g3augk7fa9.apps.googleusercontent.com";
+
+const SCOPE       = "https://www.googleapis.com/auth/drive.file";
+const FOLDER_NAME = "Adi-Devanshi App";     // created in your Drive
+const DATA_FILE   = "app-data.json";        // all tracker data lives here
+
+/* OPTIONAL: paste a free key from themoviedb.org (Settings → API → "API Key")
+   to turn on movie/series search with posters in the Movies tab.
+   The app still works fine without it — you'll just type titles manually. */
+const TMDB_API_KEY = "0c45c70fae3290bb861473c9bbb1a844";
+
+/* OPTIONAL: food autocomplete in Meals & Foods tried. "DEMO_KEY" works out of
+   the box (limited to ~30 searches/hour). For unlimited use, get a free key
+   in 1 minute at api.data.gov/signup and paste it here. */
+const USDA_API_KEY = "DEMO_KEY";
+
+/* ---------- state ---------- */
+const blank = () => ({movies:[],meals:[],finance:[],foods:[],travel:[],docs:[],wishlist:[],mealplan:[],celebrations:[],grocery:[]});
+function normalizeData(){
+  data.sections=data.sections||{};
+  for(const p of ["adi","devanshi","us"]){
+    data.sections[p]=data.sections[p]||{};
+    for(const k of Object.keys(blank())) if(!Array.isArray(data.sections[p][k])) data.sections[p][k]=[];
+  }
+}
+let data = {sections:{adi:blank(),devanshi:blank(),us:blank()}};
+let token=null, tokenClient=null, folderId=null, dirty=new Set();
+const PS=["adi","devanshi","us"], PNAME={adi:"Adi",devanshi:"Devanshi",us:"Us"};
+let subFolders={adi:null,devanshi:null,us:null};
+let fileIds={adi:{},devanshi:{},us:{}};
+const TRACKS=()=>Object.keys(blank());
+const dkey=(p,t)=>p+"/"+t;
+let person="us", tracker="movies", saveTimer=null;
+let movStatus="watched", movFilter="all", movBulk=false, sugT=null;
+let movView="shelves", movRegion="all", movDetail=null;
+let movRate=3, movProg="finished", movAddDate="";
+let finPaste=false, finPreview=null, finText="";
+let mpDate=null; // meal-plan day being viewed (set on first open)
+let travFilter="all", travDetail=null, finScope="month", finMonth=null;
+let editId=null, foodDetail=null;
+
+const $  = s=>document.querySelector(s);
+const $$ = s=>[...document.querySelectorAll(s)];
+const esc = s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const hue = {adi:["--adi","--adi-soft"],devanshi:["--dev","--dev-soft"],us:["--us","--us-soft"],home:["--us","--us-soft"]};
+
+function setStatus(msg,cls){const el=$("#saveState");el.textContent=msg;el.className=cls||"";}
+
+/* ---------- Google sign-in (Google Identity Services) ---------- */
+window.addEventListener("load",()=>{
+  // splash: let the little intro play, then melt into the app
+  setTimeout(()=>{
+    const sp=$("#splash");
+    if(sp){sp.classList.add("hide");setTimeout(()=>sp.remove(),600);}
+  },1500);
+  if(CLIENT_ID.startsWith("PASTE_")){$("#setupWarn").classList.remove("hidden");}
+  // offline peek: show the last synced copy immediately while sign-in is pending
+  try{
+    const c=JSON.parse(localStorage.getItem("ad_cache")||"null");
+    if(c&&c.sections){data=c;normalizeData();$("#offBanner").classList.remove("hidden");$("#appView").classList.remove("hidden");render();}
+  }catch(e){}
+  const wait=setInterval(()=>{
+    if(window.google?.accounts?.oauth2){
+      clearInterval(wait);
+      tokenClient=google.accounts.oauth2.initTokenClient({
+        client_id:CLIENT_ID, scope:SCOPE,
+        callback:async r=>{
+          if(r.error){setStatus("Sign-in failed: "+r.error,"error");return;}
+          token=r.access_token;
+          cacheToken(r);
+          await openDrive();
+        }
+      });
+      // Auto-resume: if we still hold a valid key from earlier, skip the button
+      const saved=loadToken();
+      if(saved){token=saved;openDrive();}
+    }
+  },100);
+});
+
+/* Remember the sign-in key so reopening the app within ~1 hour needs no tap */
+function cacheToken(r){
+  try{localStorage.setItem("gd_tok",JSON.stringify({
+    t:r.access_token, exp:Date.now()+((r.expires_in||3600)-120)*1000
+  }));}catch(e){}
+}
+function loadToken(){
+  try{
+    const s=JSON.parse(localStorage.getItem("gd_tok"));
+    if(s&&s.exp>Date.now()) return s.t;
+  }catch(e){}
+  return null;
+}
+$("#signInBtn").onclick=()=>{
+  if(CLIENT_ID.startsWith("PASTE_")){$("#setupWarn").classList.remove("hidden");window.scrollTo(0,0);return;}
+  tokenClient.requestAccessToken({prompt:""});
+};
+$("#signOutBtn").onclick=()=>{
+  if(token) google.accounts.oauth2.revoke(token,()=>{});
+  token=null;try{localStorage.removeItem("gd_tok");}catch(e){}$("#appView").classList.add("hidden");$("#authView").classList.remove("hidden");
+  setStatus("");
+};
+
+/* Silent token refresh: Drive tokens expire after ~1 hour */
+async function drive(url,opts={},retry=true){
+  opts.headers=Object.assign({},opts.headers,{Authorization:"Bearer "+token});
+  const res=await fetch(url,opts);
+  if(res.status===401&&retry){
+    await new Promise(ok=>{
+      tokenClient.callback=r=>{token=r.access_token;cacheToken(r);ok();};
+      tokenClient.requestAccessToken({prompt:""});
+    });
+    return drive(url,opts,false);
+  }
+  return res;
+}
+
+/* ---------- Drive: find/create folder + data file ---------- */
+const FURL=id=>`https://www.googleapis.com/drive/v3/files/${id}?alt=media`;
+async function openDrive(){
+  try{
+    setStatus("Opening your Drive…","saving");
+    folderId=await findOrCreateFolder();
+    for(const p of PS) subFolders[p]=await findFolderIn(PNAME[p],folderId);
+    const anySub=PS.some(p=>subFolders[p]);
+    if(!anySub){
+      // first run in the folder layout: migrate whatever older format exists
+      let migrated=false;
+      for(const p of PS){
+        const id=await findFile(p+"-data.json");
+        if(id){const r=await drive(FURL(id));const j=await r.json();if(j&&typeof j==="object"){data.sections[p]=j;migrated=true;}}
+      }
+      if(!migrated){
+        const legacy=await findFile(DATA_FILE);
+        if(legacy){const r=await drive(FURL(legacy));const j=await r.json();if(j&&j.sections)data=j;}
+      }
+      normalizeData();
+      setStatus("Organising your Drive into folders…","saving");
+      for(const p of PS){
+        subFolders[p]=await createFolder(PNAME[p],folderId);
+        await Promise.all(TRACKS().map(async t=>{
+          fileIds[p][t]=await createJsonFileIn(t+".json",subFolders[p],data.sections[p][t]);
+        }));
+      }
+    }else{
+      for(const p of PS) if(!subFolders[p]) subFolders[p]=await createFolder(PNAME[p],folderId);
+      await Promise.all(PS.map(async p=>{
+        const files=await listFolder(subFolders[p]);
+        for(const f of files){
+          const t=f.name.replace(/\.json$/,"");
+          if(TRACKS().includes(t)) fileIds[p][t]=f.id;
+        }
+      }));
+      normalizeData();
+      await Promise.all(PS.flatMap(p=>TRACKS().filter(t=>fileIds[p][t]).map(async t=>{
+        try{
+          const r=await drive(FURL(fileIds[p][t]));
+          const j=await r.json();
+          if(Array.isArray(j)) data.sections[p][t]=j;
+        }catch(e){}
+      })));
+    }
+    normalizeData();
+    $("#authView").classList.add("hidden");
+    $("#offBanner").classList.add("hidden");
+    $("#appView").classList.remove("hidden");
+    try{localStorage.setItem("ad_cache",JSON.stringify(data));}catch(e){}
+    setStatus("Synced with Google Drive ✓","saved");
+    render();
+  }catch(e){
+    console.error(e);
+    setStatus("Could not reach Drive — check your connection and GCP setup.","error");
+  }
+}
+async function findOrCreateFolder(){
+  const q=encodeURIComponent(`name='${FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`);
+  const r=await drive(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)`);
+  const j=await r.json();
+  if(j.files?.length) return j.files[0].id;
+  return createFolder(FOLDER_NAME,null);
+}
+async function createFolder(name,parent){
+  const meta={name,mimeType:"application/vnd.google-apps.folder"};
+  if(parent)meta.parents=[parent];
+  const c=await drive("https://www.googleapis.com/drive/v3/files",{
+    method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(meta)});
+  return (await c.json()).id;
+}
+async function findFolderIn(name,parent){
+  const q=encodeURIComponent(`name='${name}' and '${parent}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`);
+  const r=await drive(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)`);
+  const j=await r.json();
+  return j.files?.[0]?.id||null;
+}
+async function listFolder(id){
+  const q=encodeURIComponent(`'${id}' in parents and trashed=false`);
+  const r=await drive(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)&pageSize=100`);
+  const j=await r.json();
+  return j.files||[];
+}
+async function findFile(name){
+  const q=encodeURIComponent(`name='${name}' and '${folderId}' in parents and trashed=false`);
+  const r=await drive(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)`);
+  const j=await r.json();
+  return j.files?.[0]?.id||null;
+}
+async function createJsonFileIn(name,parent,obj){
+  const meta={name,parents:[parent],mimeType:"application/json"};
+  const body=new FormData();
+  body.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));
+  body.append("file",new Blob([JSON.stringify(obj)],{type:"application/json"}));
+  const r=await drive("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{method:"POST",body});
+  return (await r.json()).id;
+}
+
+/* ---------- save (debounced) ---------- */
+function save(extraTracker){
+  const p=person==="home"?"us":person;
+  if(!token||!subFolders[p]){setStatus("Viewing offline copy — sign in to save changes","error");return;}
+  dirty.add(dkey(p,tracker));
+  if(extraTracker)dirty.add(dkey(p,extraTracker));
+  setStatus("Saving…","saving");
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    try{
+      for(const k of [...dirty]){
+        const [kp,kt]=k.split("/");
+        if(!TRACKS().includes(kt)){dirty.delete(k);continue;}
+        if(!fileIds[kp][kt]){
+          fileIds[kp][kt]=await createJsonFileIn(kt+".json",subFolders[kp],data.sections[kp][kt]);
+        }else{
+          await drive(`https://www.googleapis.com/upload/drive/v3/files/${fileIds[kp][kt]}?uploadType=media`,{
+            method:"PATCH",headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(data.sections[kp][kt])
+          });
+        }
+        dirty.delete(k);
+      }
+      setStatus("Saved to Google Drive ✓","saved");
+      try{localStorage.setItem("ad_cache",JSON.stringify(data));}catch(e){}
+    }catch(e){setStatus("Save failed — will retry on next change.","error");}
+  },700);
+}
+
+/* ---------- documents: real file upload to Drive ---------- */
+async function uploadDoc(file){
+  setStatus("Uploading "+file.name+"…","saving");
+  const meta={name:`${person}-${file.name}`,parents:[folderId]};
+  const body=new FormData();
+  body.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));
+  body.append("file",file);
+  const r=await drive("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink",{method:"POST",body});
+  const j=await r.json();
+  data.sections[person].docs.push({id:crypto.randomUUID(),driveId:j.id,link:j.webViewLink,name:file.name,date:today()});
+  save();render();
+}
+async function deleteDoc(item){
+  try{await drive("https://www.googleapis.com/drive/v3/files/"+item.driveId,{method:"DELETE"});}catch(e){}
+}
+
+/* ---------- rendering ---------- */
+const today=()=>new Date().toISOString().slice(0,10);
+const MONTHS3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const fdate=d=>{
+  if(!d)return"";
+  const[y,m,dd]=String(d).split("-");
+  if(dd)return new Date(d+"T00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
+  if(m)return MONTHS3[+m-1]+" "+y;
+  return y;
+};
+const stars=n=>"★".repeat(n)+"☆".repeat(5-n);
+const rupee=n=>"₹"+Number(n||0).toLocaleString("en-IN");
+
+const defs={
+  meals:{title:"Meals",sub:()=>"what we cooked and ate",
+    form:`<div class="sugbox"><input name="title" placeholder="What was the meal?" required autocomplete="off"><div class="suglist hidden usda-sug"></div></div>
+          <div class="row2"><select name="type"><option>Breakfast</option><option>Lunch</option><option selected>Dinner</option><option>Snack</option></select>
+          <input name="date" type="date" value="${today()}"></div>`,
+    item:i=>`<div class="t">${esc(i.title)}</div><div class="m">${esc(i.type)} · ${fdate(i.date)}</div>`},
+  docs:{title:"Documents",sub:p=>"Aadhaar, PAN, certificates — stored in your Drive",custom:true}
+};
+function cap(s){return s[0].toUpperCase()+s.slice(1);}
+
+/* ---------- Movies & Series: TMDB search, watchlist, filters, bulk add ---------- */
+const tmdbOn=()=>!TMDB_API_KEY.startsWith("PASTE_");
+const GENRE_MAP={28:"Action",12:"Adventure",16:"Animation",35:"Comedy",80:"Crime",99:"Documentary",18:"Drama",10751:"Family",14:"Fantasy",36:"History",27:"Horror",10402:"Music",9648:"Mystery",10749:"Romance",878:"Sci-Fi",10770:"TV Movie",53:"Thriller",10752:"War",37:"Western",10759:"Action & Adventure",10762:"Kids",10764:"Reality",10765:"Sci-Fi & Fantasy",10766:"Soap",10767:"Talk",10768:"War & Politics"};
+const LANG_MAP={en:"English",ko:"Korean",hi:"Hindi",zh:"Chinese",cn:"Chinese",tr:"Turkish",ja:"Japanese",es:"Spanish",fr:"French",th:"Thai",ta:"Tamil",te:"Telugu",ml:"Malayalam",kn:"Kannada",mr:"Marathi",bn:"Bengali",pa:"Punjabi",ur:"Urdu",gu:"Gujarati",de:"German",it:"Italian",pt:"Portuguese",ru:"Russian"};
+async function tmdbSearch(q){
+  const r=await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(q)}&include_adult=false`);
+  const j=await r.json();
+  return (j.results||[]).filter(x=>x.media_type==="movie"||x.media_type==="tv").slice(0,6)
+    .map(x=>({title:x.title||x.name,year:(x.release_date||x.first_air_date||"").slice(0,4),
+              poster:x.poster_path||"",mediaType:x.media_type,
+              genres:(x.genre_ids||[]).map(g=>GENRE_MAP[g]).filter(Boolean).slice(0,3),
+              region:LANG_MAP[x.original_language]||""}));
+}
+function posterSrc(pp,w){return pp?(String(pp).startsWith("http")?pp:"https://image.tmdb.org/t/p/"+w+pp):"";}
+const starBtns=(val,act)=>[1,2,3,4,5].map(n=>`<button type="button" class="stb${n<=+val?" on":""}" data-${act}="${n}">★</button>`).join("");
+function dateSel(id,val){
+  const parts=String(val||"").split("-"), y=parts[0]||"", m=parts[1]||"", d=parts[2]||"";
+  const Y=new Date().getFullYear();
+  let yopts="";for(let yy=Y;yy>=Y-80;yy--)yopts+=`<option${String(yy)===y?" selected":""}>${yy}</option>`;
+  return `<div class="row2">
+    <select id="${id}D"><option value="">Day</option>${[...Array(31)].map((_,i)=>`<option${+d===i+1?" selected":""} value="${String(i+1).padStart(2,"0")}">${i+1}</option>`).join("")}</select>
+    <select id="${id}M"><option value="">Month</option>${MONTHS3.map((mm,ix)=>`<option${+m===ix+1?" selected":""} value="${String(ix+1).padStart(2,"0")}">${mm}</option>`).join("")}</select>
+    <select id="${id}Y"><option value="">Year</option>${yopts}</select>
+  </div>`;
+}
+function dateVal(id){
+  const y=$("#"+id+"Y").value,m=$("#"+id+"M").value,d=$("#"+id+"D").value;
+  return y?(y+(m?("-"+m+(d?("-"+d):"")):"")):"";
+}
+function parsePartialDate(t){
+  t=String(t).trim();let m;
+  if(/^(19|20)\d{2}$/.test(t))return t;
+  if(/^(19|20)\d{2}-\d{2}(-\d{2})?$/.test(t))return t;
+  if((m=t.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-]((?:19|20)\d{2})$/)))
+    return m[3]+"-"+m[2].padStart(2,"0")+"-"+m[1].padStart(2,"0");
+  const lm=t.toLowerCase().match(/^([a-z]{3,9})\s+((?:19|20)\d{2})$/);
+  if(lm){const ix=MONTHS3.map(x=>x.toLowerCase()).indexOf(lm[1].slice(0,3));if(ix>=0)return lm[2]+"-"+String(ix+1).padStart(2,"0");}
+  return "";
+}
+function addMovie(list,m,extra){
+  extra=extra||{};
+  list.unshift({id:crypto.randomUUID(),title:m.title,year:m.year||"",poster:m.poster||"",
+    mediaType:m.mediaType||"movie",genres:m.genres||[],region:m.region||"",notes:"",
+    progress:extra.progress||movProg,
+    rating:extra.rating!=null?+extra.rating:movRate,
+    date:extra.date!=null&&extra.date!==""?extra.date:dateVal("movAdd")});
+}
+function movieRow(i){
+  const mt=i.mediaType||"movie";
+  return `<li data-id="${i.id}">
+    ${i.poster?`<img class="poster" loading="lazy" src="${posterSrc(i.poster,"w92")}" alt="" data-open="${i.id}">`:""}
+    <div class="item-main" data-open="${i.id}" style="cursor:pointer">
+      <div class="t">${esc(i.title)}${i.year?` <span style="color:var(--ink-soft);font-weight:500">(${esc(i.year)})</span>`:""}${mt==="tv"?' <span class="badge">Series</span>':""}${i.progress==="halfway"?' <span class="badge">½</span>':""}</div>
+      <div class="m">${[+i.rating?`<span class="stars">${stars(Math.min(5,+i.rating))}</span>`:"",i.date?fdate(i.date):"",i.region||"",i.notes?"📝":""].filter(Boolean).join(" · ")||"—"}</div>
+    </div>
+    <button class="del" aria-label="Delete">✕</button>
+  </li>`;
+}
+function movShelves(items){
+  const Y=new Date().getFullYear();
+  const wy=i=>i.date?+String(i.date).slice(0,4):0;
+  const s=[];const push=(l,a)=>{if(a.length)s.push([l,a]);};
+  push(`This year (${Y})`,items.filter(i=>wy(i)===Y));
+  push(`Last year (${Y-1})`,items.filter(i=>wy(i)===Y-1));
+  push("Top rated ★",[...items.filter(i=>+i.rating>=4)].sort((a,b)=>b.rating-a.rating));
+  push("Earlier",items.filter(i=>wy(i)>0&&wy(i)<=Y-2));
+  push("No date set",items.filter(i=>!wy(i)));
+  return s;
+}
+function pcard(i){
+  return `<button class="pcard" data-open="${i.id}">
+    ${i.poster?`<img loading="lazy" src="${posterSrc(i.poster,"w185")}" alt="">`:`<span class="noimg">${esc(i.title)}</span>`}
+    <span class="pt">${esc(i.title)}</span>
+    <span class="ps">${+i.rating?stars(Math.min(5,+i.rating)):""}${i.progress==="halfway"?" ½":""}</span>
+  </button>`;
+}
+function detailSheet(i){
+  return `<div class="overlay" id="movOv"><div class="sheet">
+    ${i.poster?`<img src="${posterSrc(i.poster,"w342")}" alt="" style="width:100%;max-height:58vh;object-fit:cover;border-radius:14px;display:block">`:""}
+    <h2 style="font-size:24px;margin-top:12px">${esc(i.title)}</h2>
+    <div style="color:var(--ink-soft);font-size:13px">${[i.year,((i.mediaType||"movie")==="tv"?"Series":"Film"),i.region].filter(Boolean).map(esc).join(" · ")}</div>
+    <div class="starrow" style="margin-top:8px">${starBtns(i.rating,"dr")}${i.progress==="halfway"?`<span class="badge" style="margin-left:8px">½ halfway</span>`:""}</div>
+    <div style="margin-top:8px">${dateSel("movD2",i.date)}</div>
+    ${(i.genres||[]).length?`<div style="margin-top:8px">${i.genres.map(g=>`<span class="gchip">${esc(g)}</span>`).join("")}</div>`:""}
+    <textarea id="movNotes" placeholder="Notes — what did you think?">${esc(i.notes||"")}</textarea>
+    <div id="posterEdit" class="hidden" style="margin-top:8px">
+      <input id="posterUrl" placeholder="Paste an image link (https://…)">
+      <button data-dact="setposter" style="margin-top:6px;background:var(--accent);color:#fff;padding:10px;border-radius:10px;width:100%">Use this poster</button>
+    </div>
+    <button class="linky" data-dact="togglePoster" style="margin:6px auto 0">Change poster</button>
+    <div class="actions">
+      ${i.progress==="halfway"?`<button data-dact="finish" style="background:var(--accent);color:#fff">✓ Finished it</button>`:`<button data-dact="half" class="bghost">Mark ½ halfway</button>`}
+      <button data-dact="del" class="bdel">Delete</button>
+      <button data-dact="close" class="bghost">Close</button>
+    </div>
+  </div></div>`;
+}
+function renderMovies(panel,list){
+  if(!movAddDate)movAddDate=String(new Date().getFullYear());
+  const nF=list.filter(i=>(i.mediaType||"movie")==="movie").length, nS=list.length-nF;
+  const addControls=`
+    <div class="starrow">${starBtns(movRate,"ar")}
+      <button type="button" class="chip ${movProg==="finished"?"active":""}" data-ap="finished">Finished</button>
+      <button type="button" class="chip ${movProg==="halfway"?"active":""}" data-ap="halfway">½ Halfway</button>
+    </div>
+    ${dateSel("movAdd",movAddDate)}`;
+  const addUI=movBulk
+    ?`<div class="addrow"><textarea id="bulkTxt" placeholder="One per line — rating & date optional after | marks:&#10;The First Frost | 5 | Mar 2025&#10;Twelve Letters | 4 | 2025&#10;Interstellar"></textarea><button id="bulkGo" style="background:var(--accent);color:#fff;padding:11px;border-radius:10px">Add all${tmdbOn()?" — finds posters automatically":""}</button></div>`
+    :tmdbOn()
+      ?`<div class="addrow"><div class="sugbox"><input id="movQ" placeholder="Search any movie or series…" autocomplete="off"><div class="suglist hidden" id="movSug"></div></div>${addControls}</div>`
+      :`<form class="addrow" id="movManual"><input id="movQ" placeholder="Movie or series name" required>${addControls}<button type="submit">Add</button></form>`;
+  const regs=[...new Set(list.map(i=>i.region).filter(Boolean))].sort();
+  if(movRegion!=="all"&&!regs.includes(movRegion)) movRegion="all";
+  const shown=list.filter(i=>{
+    const mt=i.mediaType||"movie";
+    return (movFilter==="all"||mt===movFilter)&&(movRegion==="all"||i.region===movRegion);
+  });
+  let content;
+  if(movView==="shelves"){
+    const sh=movShelves(shown);
+    content=sh.length?sh.map(([label,items])=>`<div class="shelf"><h3>${label}<span class="cnt">${items.length}</span></h3><div class="prow">${items.slice(0,24).map(pcard).join("")}</div></div>`).join(""):`<div class="empty">Nothing here yet — add the first one above.</div>`;
+  }else{
+    content=shown.length?`<ul class="items">${shown.map(movieRow).join("")}</ul>`:`<div class="empty">Nothing here yet.</div>`;
+  }
+  const it=movDetail?list.find(x=>x.id===movDetail):null;
+
+  panel.innerHTML=`<div class="sub" style="margin-bottom:10px"><b>${list.length}</b> total · <b>${nF}</b> films · <b>${nS}</b> series${person==="us"?" · together":""}</div>
+    ${addUI}
+    <button class="linky" id="bulkToggle">${movBulk?"← Back to search":"Bulk add — paste many titles at once"}</button>
+    <div class="chips">
+      <button data-v="shelves" class="${movView==="shelves"?"active":""}">▦ Shelves</button>
+      <button data-v="list" class="${movView==="list"?"active":""}">≡ List</button>
+      <button data-f="all" class="${movFilter==="all"?"active":""}">All</button>
+      <button data-f="movie" class="${movFilter==="movie"?"active":""}">Films</button>
+      <button data-f="tv" class="${movFilter==="tv"?"active":""}">Series</button>
+    </div>
+    ${regs.length>1?`<div class="chips"><button data-r="all" class="${movRegion==="all"?"active":""}">All languages</button>${regs.map(r=>`<button data-r="${esc(r)}" class="${movRegion===r?"active":""}">${esc(r)}</button>`).join("")}</div>`:""}
+    ${content}
+    ${it?detailSheet(it):""}`;
+
+  // add-row controls update in place, so typed search text survives
+  panel.querySelectorAll("[data-ar]").forEach(b=>b.onclick=()=>{
+    movRate=+b.dataset.ar;
+    panel.querySelectorAll("[data-ar]").forEach(x=>x.classList.toggle("on",+x.dataset.ar<=movRate));
+  });
+  panel.querySelectorAll("[data-ap]").forEach(b=>b.onclick=()=>{
+    movProg=b.dataset.ap;
+    panel.querySelectorAll("[data-ap]").forEach(x=>x.classList.toggle("active",x.dataset.ap===movProg));
+  });
+  ["D","M","Y"].forEach(x=>{const el=$("#movAdd"+x);if(el)el.onchange=()=>{movAddDate=dateVal("movAdd");};});
+
+  panel.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{movFilter=b.dataset.f;render();});
+  panel.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{movView=b.dataset.v;render();});
+  panel.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{movRegion=b.dataset.r;render();});
+  panel.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{movDetail=b.dataset.open;render();});
+  $("#bulkToggle").onclick=()=>{movBulk=!movBulk;render();};
+
+  if(it){
+    $("#movOv").onclick=e=>{if(e.target.id==="movOv"){movDetail=null;render();}};
+    $("#movNotes").oninput=e=>{it.notes=e.target.value;save();};
+    ["D","M","Y"].forEach(x=>{const el=$("#movD2"+x);if(el)el.onchange=()=>{it.date=dateVal("movD2");save();};});
+    panel.querySelectorAll("[data-dr]").forEach(b=>b.onclick=()=>{it.rating=+b.dataset.dr;save();render();});
+    panel.querySelectorAll("[data-dact]").forEach(b=>{
+      b.onclick=()=>{
+        const act=b.dataset.dact;
+        if(act==="finish"){it.progress="finished";save();render();}
+        if(act==="half"){it.progress="halfway";save();render();}
+        if(act==="togglePoster")$("#posterEdit").classList.toggle("hidden");
+        if(act==="setposter"){const v=$("#posterUrl").value.trim();if(v){it.poster=v;save();render();}}
+        if(act==="del"){const ix=list.findIndex(x=>x.id===it.id);if(ix>=0){const del=list.splice(ix,1)[0];offerUndo(del.title,list,del,ix);}movDetail=null;save();render();}
+        if(act==="close"){movDetail=null;render();}
+      };
+    });
+  }
+
+  if(movBulk){
+    $("#bulkGo").onclick=async()=>{
+      const lines=$("#bulkTxt").value.split(/\n/).map(x=>x.trim()).filter(Boolean);
+      if(!lines.length)return;
+      $("#bulkGo").disabled=true;
+      let n=0;
+      for(const line of lines){
+        n++;
+        const parts=line.split("|").map(x=>x.trim()).filter(Boolean);
+        const title=parts[0];let rating=movRate,date="";
+        for(const tok of parts.slice(1)){
+          if(/^[1-5]$/.test(tok))rating=+tok;
+          else{const pd=parsePartialDate(tok);if(pd)date=pd;}
+        }
+        setStatus(`Adding ${n} of ${lines.length}: ${title}`,"saving");
+        let m={title};
+        if(tmdbOn()){try{const r=await tmdbSearch(title);if(r[0])m=r[0];}catch(e){}}
+        addMovie(list,m,{rating,date});
+      }
+      movBulk=false;save();render();
+    };
+  }else if(tmdbOn()){
+    const q=$("#movQ"),box=$("#movSug");
+    q.oninput=()=>{
+      clearTimeout(sugT);
+      const v=q.value.trim();
+      if(v.length<2){box.classList.add("hidden");return;}
+      sugT=setTimeout(async()=>{
+        let res=[];try{res=await tmdbSearch(v);}catch(e){}
+        box.innerHTML=res.map((m,ix)=>`<button data-ix="${ix}">${m.poster?`<img src="${posterSrc(m.poster,"w92")}" alt="">`:`<span class="poster" style="width:32px;height:48px"></span>`}<span>${esc(m.title)} <span class="y">${esc(m.year)}${m.mediaType==="tv"?" · series":""}</span></span></button>`).join("")
+          +`<button data-ix="-1"><span>Add “${esc(v)}” without details</span></button>`;
+        box.classList.remove("hidden");
+        box.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+          const ix=+b.dataset.ix;
+          addMovie(list,ix<0?{title:v}:res[ix]);
+          save();render();
+        });
+      },350);
+    };
+  }else{
+    $("#movManual").onsubmit=e=>{e.preventDefault();const v=$("#movQ").value.trim();if(v){addMovie(list,{title:v});save();render();}};
+  }
+}
+
+const FIN_CATS=["Food","Groceries","Travel","Shopping","Bills","Health","Fun","Other"];
+function guessCategory(s){
+  s=s.toLowerCase();
+  const rules=[
+    ["Food",/swiggy|zomato|restaurant|cafe|pizza|burger|dominos|kfc|mcd|dhaba|biryani|momo|chai|coffee|dosa|thali/],
+    ["Groceries",/grocer|bigbasket|blinkit|zepto|instamart|kirana|sabzi|vegetab|milk|dmart|ration/],
+    ["Travel",/petrol|diesel|fuel|uber|ola|rapido|auto|train|irctc|flight|indigo|bus|metro|toll|cab|parking/],
+    ["Shopping",/amazon|flipkart|myntra|ajio|meesho|mall|clothes|shoe|nykaa|jewell/],
+    ["Bills",/recharge|electric|bill|rent|wifi|broadband|jio|airtel|gas|dth|emi|insurance|maintenance/],
+    ["Health",/medicin|pharma|apollo|hospital|doctor|clinic|1mg|netmeds|lab|gym|dental/],
+    ["Fun",/movie|bookmyshow|pvr|inox|netflix|spotify|prime|hotstar|game|concert|party/]
+  ];
+  for(const[c,r]of rules) if(r.test(s)) return c;
+  return "Other";
+}
+function parseExpenses(text){
+  let t=text.replace(/\s+/g," ").trim();
+  const found=[]; let m;
+  const re=/(?:(?:₹|rs\.?|inr)\s*([\d,]+(?:\.\d{1,2})?))|(?:([\d,]+(?:\.\d{1,2})?)\s*\/-)|(?:\b(?:spent|paid|debited(?:\s+(?:by|for|with))?|sent|gave|purchase\s+of|payment\s+of)\s*(?:₹|rs\.?|inr)?\s*:?\s*([\d,]+(?:\.\d{1,2})?))/gi;
+  while((m=re.exec(t))){
+    const amt=parseFloat((m[1]||m[2]||m[3]).replace(/,/g,""));
+    if(amt>0) found.push({amt,start:m.index,end:re.lastIndex});
+  }
+  if(!found.length){ // fallback: bare numbers ("swiggy 450, petrol 1200")
+    t=t.replace(/\b\d{1,4}[\/\-]\d{1,2}(?:[\/\-]\d{2,4})?\b/g,m=>" ".repeat(m.length));
+    const re2=/(?:^|[\s:])([\d,]+(?:\.\d{1,2})?)(?=[\s.,;!]|$)/g;
+    while((m=re2.exec(t))){
+      const amt=parseFloat(m[1].replace(/,/g,""));
+      if(amt>=10&&amt<10000000) found.push({amt,start:m.index,end:re2.lastIndex});
+    }
+  }
+  return found.map((f,i)=>{
+    const a=i===0?0:Math.ceil((found[i-1].end+f.start)/2);
+    const b=i===found.length-1?t.length:Math.floor((f.end+found[i+1].start)/2);
+    const seg=t.slice(a,b);
+    return {title:extractDesc(seg),amount:f.amt,date:extractDate(seg),category:guessCategory(seg)};
+  });
+}
+const shiftMonth=(m,n)=>{const d=new Date(m+"-01T00:00");d.setMonth(d.getMonth()+n);return d.toLocaleDateString("en-CA").slice(0,7);};
+function bars(pairs,fmt){
+  const max=Math.max(...pairs.map(p=>p[1]),1);
+  return `<div style="margin-bottom:12px">`+pairs.map(([l,v])=>`<div class="barrow"><span class="barlab">${esc(String(l))}</span><span class="bartrack"><span class="barfill" style="width:${Math.max(3,Math.round(v/max*100))}%"></span></span><span class="barval">${fmt(v)}</span></div>`).join("")+`</div>`;
+}
+function renderFinance(panel,list){
+  if(!finMonth)finMonth=today().slice(0,7);
+  const shown=finScope==="month"?list.filter(i=>(i.date||"").slice(0,7)===finMonth):list;
+  const total=shown.reduce((s,i)=>s+ +i.amount,0);
+  const mLabel=new Date(finMonth+"-01T00:00").toLocaleDateString("en-IN",{month:"long",year:"numeric"});
+  const k={};shown.forEach(i=>{const c=i.category||"Other";k[c]=(k[c]||0)+ +i.amount;});
+  const cPairs=Object.entries(k).sort((a,b)=>b[1]-a[1]);
+  const catSel=`<select name="category">${FIN_CATS.map(c=>`<option>${c}</option>`).join("")}</select>`;
+  let body;
+  if(finPaste){
+    const preview=!finPreview?"":
+      `<div style="border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px">
+        <div class="sub" style="margin-bottom:6px">${finPreview.length
+          ?`Found ${finPreview.length} expense${finPreview.length>1?"s":""} — remove any that look wrong:`
+          :"Couldn’t find any amounts in that message — try the normal add instead."}</div>
+        ${finPreview.length?`<ul class="items">${finPreview.map((p,ix)=>`
+          <li><div class="item-main"><div class="t">${esc(p.title)}</div><div class="m">${fdate(p.date)} · ${esc(p.category||"Other")}</div></div>
+          <span class="badge">${rupee(p.amount)}</span><button class="del" data-px="${ix}">✕</button></li>`).join("")}</ul>
+        <button id="finAdd" style="background:var(--accent);color:#fff;padding:11px;border-radius:10px;width:100%;margin-top:10px">Add ${finPreview.length===1?"this expense":"these "+finPreview.length+" expenses"}</button>`:""}
+      </div>`;
+    body=`<div class="addrow">
+        <textarea id="finTxt" placeholder="Paste a bank SMS, or just type naturally:&#10;Spent 450 at Swiggy yesterday and 1200 on petrol Friday">${esc(finText)}</textarea>
+        <button id="finGo" style="background:var(--accent);color:#fff;padding:11px;border-radius:10px">Find the expenses</button>
+      </div>${preview}`;
+  }else{
+    body=`<form class="addrow" id="finForm">
+      <input name="title" placeholder="What was it for?" required>
+      <div class="row2"><input name="amount" type="number" step="any" inputmode="decimal" placeholder="Amount (₹)" required>${catSel}</div>
+      <input name="date" type="date" value="${today()}">
+      <button type="submit">Add</button></form>`;
+  }
+  panel.innerHTML=`<h2>Finance</h2><div class="sub">expenses and spends</div>
+    <div class="seg"><button data-fs="month" class="${finScope==="month"?"active":""}">By month</button><button data-fs="all" class="${finScope==="all"?"active":""}">All time</button></div>
+    ${finScope==="month"?`<div class="daynav"><button id="fmPrev" aria-label="Previous month">‹</button><div class="dlabel">${mLabel}</div><button id="fmNext" aria-label="Next month">›</button></div>`:""}
+    <div class="total"><span>Total</span><span>${rupee(total)}</span></div>
+    <button class="linky" id="finCsv" style="margin:2px auto 8px">Export all as CSV</button>
+    ${cPairs.length>1?bars(cPairs,rupee):""}
+    ${body}
+    <button class="linky" id="finToggle">${finPaste?"← Back to normal add":"Paste a message — I’ll find the expenses"}</button>
+    ${shown.length?`<ul class="items">${shown.map(i=>`
+      <li data-id="${i.id}" class="${(!finPaste&&editId===i.id)?"editing":""}"><div class="item-main" data-eopen="${i.id}" style="cursor:pointer"><div class="t">${esc(i.title)}</div><div class="m">${fdate(i.date)}${i.category?" · "+esc(i.category):""}</div></div>
+      <span class="badge">${rupee(i.amount)}</span><button class="del" aria-label="Delete">✕</button></li>`).join("")}</ul>`
+    :`<div class="empty">No expenses ${finScope==="month"?"in "+mLabel+" yet":"yet"}.</div>`}`;
+
+  $("#finCsv").onclick=()=>{
+    const rows=[["Date","Description","Category","Amount"]].concat(list.map(i=>[i.date||"",i.title||"",i.category||"Other",i.amount||0]));
+    const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv"}));
+    a.download=`finance-${person}-${today()}.csv`;a.click();URL.revokeObjectURL(a.href);
+  };
+
+  panel.querySelectorAll("[data-fs]").forEach(b=>b.onclick=()=>{finScope=b.dataset.fs;render();});
+  if(finScope==="month"){
+    $("#fmPrev").onclick=()=>{finMonth=shiftMonth(finMonth,-1);render();};
+    $("#fmNext").onclick=()=>{finMonth=shiftMonth(finMonth,1);render();};
+  }
+  $("#finToggle").onclick=()=>{finPaste=!finPaste;finPreview=null;finText="";render();};
+  if(finPaste){
+    $("#finGo").onclick=()=>{finText=$("#finTxt").value;finPreview=parseExpenses(finText);render();};
+    panel.querySelectorAll("[data-px]").forEach(b=>b.onclick=()=>{finPreview.splice(+b.dataset.px,1);render();});
+    const add=$("#finAdd");
+    if(add)add.onclick=()=>{
+      finPreview.forEach(p=>list.unshift({id:crypto.randomUUID(),title:p.title,amount:p.amount,date:p.date,category:p.category||"Other"}));
+      finPaste=false;finPreview=null;finText="";save();render();
+    };
+  }else{
+    const editing=editId?list.find(x=>x.id===editId):null;
+    if(editing){
+      fillForm($("#finForm"),editing);
+      $("#finForm").querySelector("button[type=submit]").textContent="Save changes";
+    }
+    panel.querySelectorAll("[data-eopen]").forEach(b=>b.onclick=()=>{editId=b.dataset.eopen;render();});
+    $("#finForm").onsubmit=e=>{
+      e.preventDefault();
+      if(editing){new FormData(e.target).forEach((v,k)=>editing[k]=v);editId=null;}
+      else{const item={id:crypto.randomUUID()};new FormData(e.target).forEach((v,k)=>item[k]=v);list.unshift(item);}
+      save();render();
+    };
+  }
+}
+
+/* ---------- USDA food autocomplete for Meals & Foods tried ---------- */
+function attachUsda(panel){
+  const inp=panel.querySelector('input[name="title"]'),box=panel.querySelector(".usda-sug");
+  if(!inp||!box)return;
+  let t;
+  inp.addEventListener("input",()=>{
+    clearTimeout(t);
+    const v=inp.value.trim();
+    if(v.length<3){box.classList.add("hidden");return;}
+    t=setTimeout(async()=>{
+      try{
+        const r=await fetch(`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${USDA_API_KEY}&query=${encodeURIComponent(v)}&pageSize=5&dataType=Survey%20(FNDDS)`);
+        if(!r.ok)throw 0;
+        const j=await r.json();
+        const foods=(j.foods||[]).map(f=>({
+          name:(f.description||"").toLowerCase(),
+          kcal:(f.foodNutrients||[]).find(n=>/energy/i.test(n.nutrientName||"")&&/kcal/i.test(n.unitName||""))?.value
+        })).filter(f=>f.name);
+        if(!foods.length){box.classList.add("hidden");return;}
+        box.innerHTML=foods.map(f=>`<button type="button" data-n="${esc(f.name)}"><span>${esc(f.name[0].toUpperCase()+f.name.slice(1))}${f.kcal?` <span class="y">~${Math.round(f.kcal)} kcal / 100g</span>`:""}</span></button>`).join("");
+        box.classList.remove("hidden");
+        box.querySelectorAll("button").forEach(b=>b.onclick=()=>{inp.value=b.dataset.n;box.classList.add("hidden");inp.focus();});
+      }catch(e){box.classList.add("hidden");}
+    },400);
+  });
+}
+
+/* ---------- Wishlist / Celebrations / Meal plan (from the old Virtual Abode) ---------- */
+const FOOD_DATASET=[
+{name:"Masala Dosa",cuisine:"Indian",calories:290,protein:7,carbs:45,fat:9,emoji:"🥞",category:"breakfast"},
+{name:"Idli Sambar",cuisine:"Indian",calories:180,protein:6,carbs:32,fat:3,emoji:"🍽",category:"breakfast"},
+{name:"Poha",cuisine:"Indian",calories:250,protein:5,carbs:42,fat:7,emoji:"🍚",category:"breakfast"},
+{name:"Upma",cuisine:"Indian",calories:220,protein:5,carbs:38,fat:6,emoji:"🥣",category:"breakfast"},
+{name:"Aloo Paratha",cuisine:"Indian",calories:310,protein:8,carbs:48,fat:11,emoji:"🫓",category:"breakfast"},
+{name:"Moong Dal Chilla",cuisine:"Indian",calories:200,protein:12,carbs:30,fat:4,emoji:"🥞",category:"breakfast"},
+{name:"Uttapam",cuisine:"Indian",calories:270,protein:6,carbs:42,fat:8,emoji:"🥞",category:"breakfast"},
+{name:"Puri Bhaji",cuisine:"Indian",calories:380,protein:8,carbs:54,fat:16,emoji:"🥟",category:"breakfast"},
+{name:"Sabudana Khichdi",cuisine:"Indian",calories:320,protein:4,carbs:58,fat:10,emoji:"🍚",category:"breakfast"},
+{name:"Bread Pakora",cuisine:"Indian",calories:260,protein:6,carbs:34,fat:12,emoji:"🥪",category:"snack"},
+{name:"Dal Tadka",cuisine:"Indian",calories:280,protein:12,carbs:32,fat:8,emoji:"🍲",category:"main"},
+{name:"Paneer Butter Masala",cuisine:"Indian",calories:380,protein:16,carbs:12,fat:28,emoji:"🍲",category:"main"},
+{name:"Kadai Paneer",cuisine:"Indian",calories:360,protein:16,carbs:10,fat:26,emoji:"🍲",category:"main"},
+{name:"Shahi Paneer",cuisine:"Indian",calories:400,protein:18,carbs:14,fat:30,emoji:"🍲",category:"main"},
+{name:"Palak Paneer",cuisine:"Indian",calories:320,protein:14,carbs:8,fat:24,emoji:"🥬",category:"main"},
+{name:"Matar Paneer",cuisine:"Indian",calories:310,protein:14,carbs:12,fat:22,emoji:"🟢",category:"main"},
+{name:"Malai Kofta",cuisine:"Indian",calories:430,protein:12,carbs:22,fat:32,emoji:"🍲",category:"main"},
+{name:"Rajma Chawal",cuisine:"Indian",calories:370,protein:14,carbs:62,fat:8,emoji:"🍲",category:"main"},
+{name:"Chole",cuisine:"Indian",calories:280,protein:12,carbs:42,fat:10,emoji:"🧆",category:"main"},
+{name:"Baingan Bharta",cuisine:"Indian",calories:200,protein:4,carbs:24,fat:12,emoji:"🍆",category:"main"},
+{name:"Dal Makhani",cuisine:"Indian",calories:330,protein:14,carbs:38,fat:12,emoji:"🍲",category:"main"},
+{name:"Chole Bhature",cuisine:"Indian",calories:520,protein:14,carbs:68,fat:20,emoji:"🫓",category:"main"},
+{name:"Samosa",cuisine:"Indian",calories:130,protein:3,carbs:18,fat:6,emoji:"🔺",category:"snack"},
+{name:"Gulab Jamun",cuisine:"Indian",calories:175,protein:3,carbs:28,fat:6,emoji:"🟤",category:"dessert"},
+{name:"Masala Chai",cuisine:"Indian",calories:80,protein:3,carbs:10,fat:3,emoji:"☕",category:"drink"},
+{name:"Margherita Pizza",cuisine:"Italian",calories:570,protein:20,carbs:68,fat:22,emoji:"🍕",category:"main"},
+{name:"Veg Burger",cuisine:"Fast Food",calories:420,protein:12,carbs:52,fat:18,emoji:"🍔",category:"main"},
+{name:"Hakka Noodles",cuisine:"Chinese",calories:400,protein:10,carbs:62,fat:12,emoji:"🍜",category:"main"},
+{name:"Veg Tacos",cuisine:"Mexican",calories:320,protein:9,carbs:46,fat:10,emoji:"🌮",category:"main"},
+{name:"Paneer Tikka",cuisine:"Indian",calories:280,protein:18,carbs:8,fat:14,emoji:"🍢",category:"snack"},
+{name:"Butter Chicken",cuisine:"Indian",calories:450,protein:28,carbs:12,fat:32,emoji:"🍗",category:"main"},
+{name:"Paneer Wrap",cuisine:"Fast Food",calories:380,protein:14,carbs:42,fat:16,emoji:"🌯",category:"main"},
+{name:"Veg Sandwich",cuisine:"Fast Food",calories:290,protein:8,carbs:38,fat:10,emoji:"🥪",category:"breakfast"},
+{name:"French Fries",cuisine:"Fast Food",calories:320,protein:3,carbs:42,fat:15,emoji:"🍟",category:"snack"},
+{name:"McAloo Tikki",cuisine:"Fast Food",calories:350,protein:9,carbs:48,fat:12,emoji:"🍔",category:"main"},
+{name:"Veg Biryani",cuisine:"Indian",calories:400,protein:10,carbs:65,fat:12,emoji:"🍲",category:"main"},
+{name:"Tiramisu",cuisine:"Italian",calories:340,protein:6,carbs:38,fat:18,emoji:"🍰",category:"dessert"},
+{name:"Nachos",cuisine:"Mexican",calories:380,protein:8,carbs:42,fat:22,emoji:"🧀",category:"snack"}];
+
+function renderWishlist(panel,list){
+  const order={High:0,Medium:1,Low:2};
+  const sorted=[...list].sort((a,b)=>(a.purchased?1:0)-(b.purchased?1:0)||((order[a.priority]??1)-(order[b.priority]??1)));
+  const toBuy=list.filter(i=>!i.purchased&&+i.price).reduce((s,i)=>s+ +i.price,0);
+  panel.innerHTML=`<h2>Wishlist</h2><div class="sub">${person==="us"?"things we want":"things "+cap(person)+" wants"}</div>
+    ${toBuy?`<div class="total"><span>Still to buy</span><span>${rupee(toBuy)}</span></div>`:""}
+    <form class="addrow" id="wishForm">
+      <input name="title" placeholder="What do you wish for?" required>
+      <div class="row2"><input name="price" type="number" step="any" inputmode="decimal" placeholder="Price (₹, optional)">
+      <select name="priority"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
+      <button type="submit">Add</button></form>
+    ${sorted.length?`<ul class="items">${sorted.map(i=>`
+      <li data-id="${i.id}" class="${i.purchased?"done":""}">
+        <button class="chk ${i.purchased?"on":""}" data-wact="buy" aria-label="Mark purchased">${i.purchased?"✓":""}</button>
+        <div class="item-main" data-eopen="${i.id}" style="cursor:pointer"><div class="t">${esc(i.title)}</div>
+        <div class="m">${[i.price?rupee(i.price):"",i.purchased?"got it 🎉":""].filter(Boolean).join(" · ")}</div></div>
+        ${!i.purchased?`<span class="badge pri-${esc(i.priority||"Medium")}">${esc(i.priority||"Medium")}</span>`:""}
+        <button class="del" aria-label="Delete">✕</button></li>`).join("")}</ul>`
+    :`<div class="empty">Nothing wished for yet — dream a little.</div>`}`;
+  const editing=editId?list.find(x=>x.id===editId):null;
+  if(editing){
+    fillForm($("#wishForm"),editing);
+    $("#wishForm").querySelector("button[type=submit]").textContent="Save changes";
+  }
+  panel.querySelectorAll("[data-eopen]").forEach(b=>b.onclick=()=>{editId=b.dataset.eopen;render();});
+  $("#wishForm").onsubmit=e=>{
+    e.preventDefault();
+    if(editing){new FormData(e.target).forEach((v,k)=>editing[k]=v);editId=null;}
+    else{const it={id:crypto.randomUUID(),purchased:false};new FormData(e.target).forEach((v,k)=>it[k]=v);list.unshift(it);}
+    save();render();
+  };
+  panel.querySelectorAll("[data-wact]").forEach(b=>b.onclick=()=>{
+    const it=list.find(x=>x.id===b.closest("li").dataset.id);
+    if(it){it.purchased=!it.purchased;save();render();}
+  });
+}
+
+function nextOccur(dateStr,type){
+  const now=new Date();now.setHours(0,0,0,0);
+  const d=new Date(dateStr+"T00:00");
+  if(type==="Important"){return{next:d,days:Math.round((d-now)/86400000)};}
+  const n=new Date(now.getFullYear(),d.getMonth(),d.getDate());
+  if(n<now)n.setFullYear(n.getFullYear()+1);
+  return{next:n,days:Math.round((n-now)/86400000)};
+}
+function renderCeleb(panel,list){
+  const em={Birthday:"🎂",Anniversary:"💍",Important:"⭐"};
+  const en=list.map(i=>({i,...nextOccur(i.date,i.type)})).sort((a,b)=>a.days-b.days);
+  panel.innerHTML=`<h2>Celebrations</h2><div class="sub">birthdays, anniversaries &amp; big days — sorted by what’s next</div>
+    <form class="addrow" id="cbForm">
+      <input name="title" placeholder="Whose day? (e.g. Mummy’s birthday)" required>
+      <div class="row2"><select name="type"><option>Birthday</option><option>Anniversary</option><option>Important</option></select>
+      <input name="date" type="date" required></div>
+      <button type="submit">Add</button></form>
+    ${en.length?`<ul class="items">${en.map(({i,next,days})=>`
+      <li data-id="${i.id}">
+        <div class="item-main" data-eopen="${i.id}" style="cursor:pointer"><div class="t">${em[i.type]||"⭐"} ${esc(i.title)}</div>
+        <div class="m">${next.toLocaleDateString("en-IN",{day:"numeric",month:"short"})}${i.type!=="Important"?" · every year":""}</div></div>
+        <span class="badge${days>=0&&days<=7?" soon":""}">${days===0?"Today! 🎉":days===1?"Tomorrow":days>1?"in "+days+" days":(-days)+"d ago"}</span>
+        <button class="del" aria-label="Delete">✕</button></li>`).join("")}</ul>`
+    :`<div class="empty">No special days added yet.</div>`}`;
+  const editing=editId?list.find(x=>x.id===editId):null;
+  if(editing){
+    fillForm($("#cbForm"),editing);
+    $("#cbForm").querySelector("button[type=submit]").textContent="Save changes";
+  }
+  panel.querySelectorAll("[data-eopen]").forEach(b=>b.onclick=()=>{editId=b.dataset.eopen;render();});
+  $("#cbForm").onsubmit=e=>{
+    e.preventDefault();
+    if(editing){new FormData(e.target).forEach((v,k)=>editing[k]=v);editId=null;}
+    else{const it={id:crypto.randomUUID()};new FormData(e.target).forEach((v,k)=>it[k]=v);list.unshift(it);}
+    save();render();
+  };
+}
+
+const shiftDate=(iso,n)=>{const x=new Date(iso+"T00:00");x.setDate(x.getDate()+n);return x.toLocaleDateString("en-CA");};
+function renderMealPlan(panel,list){
+  if(!mpDate)mpDate=today();
+  const dayItems=list.filter(i=>i.date===mpDate);
+  const T=k=>dayItems.reduce((s,i)=>s+(+i[k]||0),0);
+  const kcal=T("cal"),P=T("protein"),C=T("carbs"),F=T("fat");
+  const types=["Breakfast","Lunch","Dinner","Snacks"];
+  const dl=new Date(mpDate+"T00:00").toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short"});
+  panel.innerHTML=`<h2>Meal plan</h2><div class="sub">plan the day’s meals</div>
+    <div class="daynav"><button id="mpPrev" aria-label="Previous day">‹</button><div class="dlabel">${dl}${mpDate===today()?" · today":""}</div><button id="mpNext" aria-label="Next day">›</button></div>
+    ${kcal?`<div class="total"><span>~${kcal} kcal planned</span><span>${P}g P · ${C}g C · ${F}g F</span></div>`:""}
+    <form class="addrow" id="mpForm">
+      <div class="sugbox"><input name="name" id="mpName" placeholder="Dish (try: dosa, paneer, poha…)" required autocomplete="off"><div class="suglist hidden" id="mpSug"></div></div>
+      <div class="row2"><select name="type">${types.map(t=>`<option${t==="Dinner"?" selected":""}>${t}</option>`).join("")}</select>
+      <input name="time" type="time"></div>
+      <input name="cal" id="mpCal" type="number" inputmode="numeric" placeholder="kcal (optional — auto for known dishes)">
+      <button type="submit">Add to ${dl}</button></form>
+    ${dayItems.length?types.map(t=>{
+      const g=dayItems.filter(i=>i.type===t);
+      return g.length?`<div class="mgroup"><h3>${t}</h3><ul class="items">${g.map(i=>`
+        <li data-id="${i.id}"><div class="item-main"><div class="t">${i.emoji?esc(i.emoji)+" ":""}${esc(i.name)}${i.time?` <span style="color:var(--ink-soft);font-weight:500">· ${esc(i.time)}</span>`:""}</div>
+        ${+i.cal?`<div class="m">~${+i.cal} kcal${+i.protein||+i.carbs||+i.fat?` · ${+i.protein||0}P ${+i.carbs||0}C ${+i.fat||0}F`:""}</div>`:""}</div>
+        <button class="markw" data-mact="cart" title="Send to grocery list">🛒</button>
+        <button class="del" aria-label="Delete">✕</button></li>`).join("")}</ul></div>`:"";
+    }).join(""):`<div class="empty">Nothing planned for this day yet.</div>`}`;
+  panel.querySelectorAll("[data-mact]").forEach(b=>b.onclick=()=>{
+    const it=list.find(x=>x.id===b.closest("li").dataset.id);
+    if(!it)return;
+    data.sections[person].grocery.unshift({id:crypto.randomUUID(),name:"Ingredients — "+it.name,done:false,
+      from:new Date(it.date+"T00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short"})});
+    save("grocery");setStatus("Sent to the grocery list 🛒","saved");
+  });
+  $("#mpPrev").onclick=()=>{mpDate=shiftDate(mpDate,-1);render();};
+  $("#mpNext").onclick=()=>{mpDate=shiftDate(mpDate,1);render();};
+  $("#mpForm").onsubmit=e=>{
+    e.preventDefault();
+    const f=new FormData(e.target), nm=String(f.get("name")||"").trim();
+    if(!nm)return;
+    const hit=FOOD_DATASET.find(x=>x.name.toLowerCase()===nm.toLowerCase());
+    list.unshift({id:crypto.randomUUID(),name:nm,type:f.get("type"),time:f.get("time")||"",
+      cal:+f.get("cal")||hit?.calories||0,
+      protein:hit?.protein||0,carbs:hit?.carbs||0,fat:hit?.fat||0,
+      emoji:hit?.emoji||"",date:mpDate});
+    save();render();
+  };
+  const inp=$("#mpName"),box=$("#mpSug");
+  inp.oninput=()=>{
+    const v=inp.value.trim().toLowerCase();
+    if(v.length<2){box.classList.add("hidden");return;}
+    const hits=FOOD_DATASET.filter(f=>f.name.toLowerCase().includes(v)).slice(0,6);
+    if(!hits.length){box.classList.add("hidden");return;}
+    box.innerHTML=hits.map(f=>`<button type="button" data-n="${esc(f.name)}" data-c="${f.calories}"><span>${f.emoji} ${esc(f.name)} <span class="y">~${f.calories} kcal · ${f.protein}P ${f.carbs}C ${f.fat}F</span></span></button>`).join("");
+    box.classList.remove("hidden");
+    box.querySelectorAll("button").forEach(b=>b.onclick=()=>{inp.value=b.dataset.n;$("#mpCal").value=b.dataset.c;box.classList.add("hidden");});
+  };
+}
+
+/* ---------- Foods tried: detail sheet with photo & notes ---------- */
+function foodSheet(i){
+  return `<div class="overlay" id="foodOv"><div class="sheet">
+    <h2 style="font-size:22px">${esc(i.title)}</h2>
+    <div style="color:var(--ink-soft);font-size:13px">${i.dateAdded?"first tried "+fdate(i.dateAdded):"a discovery"}</div>
+    <input id="fdPlace" placeholder="Where?" value="${esc(i.place||"")}" style="margin-top:10px">
+    <select id="fdVerdict" style="margin-top:8px">${["Loved it","Good","Okay","Never again"].map(v=>`<option${(i.verdict||"Good")===v?" selected":""}>${v}</option>`).join("")}</select>
+    <textarea id="fdNotes" placeholder="Notes — how was it?" style="margin-top:8px;min-height:60px">${esc(i.notes||"")}</textarea>
+    <div style="margin-top:10px">
+      ${i.photo?`<img src="${i.photo}" alt="" style="width:100%;border-radius:12px;display:block">
+        <div style="display:flex;gap:16px;margin-top:6px;justify-content:center">${i.photoLink?`<a class="doclink" href="${esc(i.photoLink)}" target="_blank" rel="noopener">Open full photo</a>`:""}<button class="linky" data-fact="rmphoto" style="margin:0">Remove photo</button></div>`
+       :`<label class="linky" style="margin:0;cursor:pointer;display:inline-block">📷 Add a photo<input type="file" id="fdPhoto" accept="image/*" hidden></label>`}
+    </div>
+    <div class="actions">
+      <button data-fact="del" class="bdel">Delete</button>
+      <button data-fact="close" class="bghost">Close</button>
+    </div>
+  </div></div>`;
+}
+function renderFoods(panel,list){
+  const it=foodDetail?list.find(x=>x.id===foodDetail):null;
+  panel.innerHTML=`<h2>Foods tried</h2><div class="sub">new dishes and places — tap one to open it</div>
+    <form class="addrow" id="foodForm">
+      <div class="sugbox"><input name="title" placeholder="Dish or food" required autocomplete="off"><div class="suglist hidden usda-sug"></div></div>
+      <div class="row2"><input name="place" placeholder="Where?">
+      <select name="verdict"><option>Loved it</option><option selected>Good</option><option>Okay</option><option>Never again</option></select></div>
+      <button type="submit">Add</button></form>
+    ${list.length?`<ul class="items">${list.map(i=>`
+      <li data-id="${i.id}">
+        ${i.photo?`<img src="${i.photo}" alt="" style="width:38px;height:38px;object-fit:cover;border-radius:8px;flex:none" data-fopen="${i.id}">`:""}
+        <div class="item-main" data-fopen="${i.id}" style="cursor:pointer">
+          <div class="t">${esc(i.title)}</div>
+          <div class="m">${[i.place,i.verdict,(i.notes?"📝":""),(i.photo?"📷":"")].filter(Boolean).join(" · ")||"—"}</div>
+        </div>
+        <button class="del" aria-label="Delete">✕</button></li>`).join("")}</ul>`
+    :`<div class="empty">Nothing tried yet — go eat something new.</div>`}
+    ${it?foodSheet(it):""}`;
+  $("#foodForm").onsubmit=e=>{
+    e.preventDefault();
+    const x={id:crypto.randomUUID(),dateAdded:today(),notes:""};
+    new FormData(e.target).forEach((v,k)=>x[k]=v);
+    list.unshift(x);save();render();
+  };
+  attachUsda(panel);
+  panel.querySelectorAll("[data-fopen]").forEach(b=>b.onclick=()=>{foodDetail=b.dataset.fopen;render();});
+  if(it){
+    $("#foodOv").onclick=e=>{if(e.target.id==="foodOv"){foodDetail=null;render();}};
+    $("#fdPlace").oninput=e=>{it.place=e.target.value;save();};
+    $("#fdVerdict").onchange=e=>{it.verdict=e.target.value;save();};
+    $("#fdNotes").oninput=e=>{it.notes=e.target.value;save();};
+    const fp=$("#fdPhoto");
+    if(fp)fp.onchange=e=>addPhoto(it,e.target.files[0],"food");
+    panel.querySelectorAll("[data-fact]").forEach(b=>b.onclick=()=>{
+      const act=b.dataset.fact;
+      if(act==="rmphoto")removePhoto(it);
+      if(act==="del"){const ix=list.findIndex(x=>x.id===it.id);if(ix>=0){const del=list.splice(ix,1)[0];offerUndo(del.title,list,del,ix);}foodDetail=null;save();render();}
+      if(act==="close"){foodDetail=null;render();}
+    });
+  }
+}
+
+/* ---------- photos: shrink for inline thumb, original to Drive ---------- */
+async function shrinkImage(file,max=520){
+  const img=await createImageBitmap(file);
+  const sc=Math.min(1,max/Math.max(img.width,img.height));
+  const c=document.createElement("canvas");
+  c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
+  c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+  return c.toDataURL("image/jpeg",0.72);
+}
+async function uploadToDrive(file,name){
+  const meta={name,parents:[folderId]};
+  const body=new FormData();
+  body.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));
+  body.append("file",file);
+  const r=await drive("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink",{method:"POST",body});
+  return r.json();
+}
+async function addPhoto(it,f,kind){
+  if(!f)return;
+  try{
+    setStatus("Adding photo…","saving");
+    it.photo=await shrinkImage(f);
+    const up=await uploadToDrive(f,`${kind}-${String(it.title||"photo").slice(0,40)}-${f.name}`);
+    it.photoLink=up.webViewLink;it.photoDriveId=up.id;
+    save();render();
+  }catch(e){setStatus("Photo failed — try again.","error");}
+}
+function removePhoto(it){
+  if(it.photoDriveId)drive("https://www.googleapis.com/drive/v3/files/"+it.photoDriveId,{method:"DELETE"}).catch(()=>{});
+  delete it.photo;delete it.photoLink;delete it.photoDriveId;
+  save();render();
+}
+
+/* ---------- undo, backup, form helpers ---------- */
+function fillForm(f,obj){[...f.elements].forEach(el=>{if(el.name&&obj[el.name]!=null)el.value=obj[el.name];});}
+let undoInfo=null,undoTimer=null;
+function offerUndo(label,list,item,idx){
+  undoInfo={list,item,idx,key:dkey(person==="home"?"us":person,tracker)};
+  $("#undoLabel").textContent=`Deleted “${String(label).slice(0,40)}”`;
+  $("#undoBar").classList.add("show");
+  clearTimeout(undoTimer);
+  undoTimer=setTimeout(()=>{$("#undoBar").classList.remove("show");undoInfo=null;},6000);
+}
+
+/* ---------- Home hub ---------- */
+function renderHub(panel){
+  const P=["adi","devanshi","us"], names={adi:"Adi",devanshi:"Devanshi",us:"Us"};
+  let cel=null;
+  P.forEach(p=>data.sections[p].celebrations.forEach(c=>{
+    const o=nextOccur(c.date,c.type);
+    if(o.days>=0&&(!cel||o.days<cel.days))cel={...o,c};
+  }));
+  const td=today(), meals=[];
+  P.forEach(p=>data.sections[p].mealplan.forEach(m=>{if(m.date===td)meals.push({...m,p});}));
+  const wl=[];
+  P.forEach(p=>data.sections[p].movies.forEach(m=>{if((m.status||"watched")==="watchlist")wl.push({...m,p});}));
+  const pick=wl.length?wl[Math.floor(Math.random()*wl.length)]:null;
+  const mo=td.slice(0,7);let spend=0;
+  P.forEach(p=>data.sections[p].finance.forEach(f=>{if((f.date||"").slice(0,7)===mo)spend+= +f.amount;}));
+  let gr=0;P.forEach(p=>gr+=data.sections[p].grocery.filter(i=>!i.done).length);
+  panel.innerHTML=`<h2>Home</h2><div class="sub">the whole abode at a glance</div>
+    ${cel?`<div class="hcard"><div class="hl">Next celebration</div>
+      <div style="font-weight:700">${cel.c.type==="Birthday"?"🎂":cel.c.type==="Anniversary"?"💍":"⭐"} ${esc(cel.c.title)}</div>
+      <div class="m" style="color:var(--ink-soft);font-size:13px">${cel.days===0?"Today! 🎉":cel.days===1?"Tomorrow":"in "+cel.days+" days"} · ${cel.next.toLocaleDateString("en-IN",{day:"numeric",month:"short"})}</div></div>`:""}
+    ${meals.length?`<div class="hcard"><div class="hl">Today’s meal plan</div>
+      ${meals.map(m=>`<div style="font-size:14px;margin-top:3px">${m.emoji||"•"} ${esc(m.name)} <span style="color:var(--ink-soft)">· ${esc(m.type)}${m.p!=="us"?" · "+names[m.p]:""}</span></div>`).join("")}</div>`:""}
+    ${pick?`<div class="hcard" style="display:flex;gap:12px;align-items:center">
+      ${pick.poster?`<img class="poster" src="https://image.tmdb.org/t/p/w92${esc(pick.poster)}" alt="">`:""}
+      <div><div class="hl">Tonight’s pick from the watchlist</div>
+      <div style="font-weight:700">${esc(pick.title)}</div>
+      <div style="color:var(--ink-soft);font-size:13px">${names[pick.p]}’ list${pick.year?" · "+esc(pick.year):""}</div></div></div>`:""}
+    <div class="statgrid">
+      <div class="stat"><div class="n">${rupee(spend)}</div><div class="l">spent this month</div></div>
+      <div class="stat"><div class="n">${gr}</div><div class="l">grocery items to buy</div></div>
+    </div>
+    ${(!cel&&!meals.length&&!pick)?`<div class="empty">Add celebrations, meal plans and watchlist films — they’ll gather here.</div>`:""}`;
+}
+
+function render(){
+  const [c,cs]=hue[person];
+  document.documentElement.style.setProperty("--accent",`var(${c})`);
+  document.documentElement.style.setProperty("--accent-soft",`var(${cs})`);
+  $$(".people button").forEach(b=>b.classList.toggle("active",b.dataset.p===person));
+  $$(".trackers button").forEach(b=>b.classList.toggle("active",b.dataset.t===tracker));
+  $(".trackers").style.display = person==="home" ? "none" : "flex";
+  if(person==="home"){renderHub($("#panel"));return;}
+
+  const d=defs[tracker], list=data.sections[person][tracker], panel=$("#panel");
+
+  if(tracker==="movies"){
+    renderMovies(panel,list);
+  }else if(tracker==="finance"){
+    renderFinance(panel,list);
+  }else if(tracker==="travel"){
+    renderTravel(panel,list);
+  }else if(tracker==="foods"){
+    renderFoods(panel,list);
+  }else if(tracker==="grocery"){
+    renderGrocery(panel,list);
+  }else if(tracker==="stats"){
+    renderStats(panel);
+  }else if(tracker==="wishlist"){
+    renderWishlist(panel,list);
+  }else if(tracker==="celebrations"){
+    renderCeleb(panel,list);
+  }else if(tracker==="mealplan"){
+    renderMealPlan(panel,list);
+  }else if(tracker==="docs"){
+    panel.innerHTML=`<h2>${d.title}</h2><div class="sub">${d.sub(person)}</div>
+      <form class="addrow" id="docForm">
+        <input type="file" id="docFile">
+        <button type="submit">Upload to Google Drive</button>
+        <div class="hint">Files are saved inside the “${FOLDER_NAME}” folder of the signed-in Google Drive.</div>
+      </form>
+      ${list.length?`<ul class="items">${list.map(i=>`
+        <li data-id="${i.id}">
+          <div class="item-main"><a class="doclink" href="${esc(i.link)}" target="_blank" rel="noopener">${esc(i.name)}</a>
+          <div class="m">uploaded ${fdate(i.date)}</div></div>
+          <button class="del" aria-label="Delete">✕</button>
+        </li>`).join("")}</ul>`
+      :`<div class="empty">No documents yet. Upload your Aadhaar, PAN, tickets…</div>`}`;
+    $("#docForm").onsubmit=e=>{
+      e.preventDefault();
+      const f=$("#docFile").files[0];
+      if(f) uploadDoc(f).catch(()=>setStatus("Upload failed.","error"));
+    };
+  }else{
+    const editing=editId?list.find(x=>x.id===editId):null;
+    panel.innerHTML=`<h2>${d.title}</h2><div class="sub">${d.sub(person)} — tap an entry to edit it</div>
+      <form class="addrow" id="addForm">${d.form}<button type="submit">${editing?"Save changes":"Add"}</button>${editing?`<button type="button" class="linky" id="editCancel" style="margin:0 auto">Cancel editing</button>`:""}</form>
+      ${list.length?`<ul class="items">${list.map(i=>`
+        <li data-id="${i.id}" class="${editing&&i.id===editId?"editing":""}">
+          <div class="item-main" data-eopen="${i.id}" style="cursor:pointer">${d.item(i)}</div>
+          ${d.right?d.right(i):""}
+          <button class="del" aria-label="Delete">✕</button>
+        </li>`).join("")}</ul>`
+      :`<div class="empty">Nothing here yet — add the first one above.</div>`}`;
+    if(editing){
+      fillForm($("#addForm"),editing);
+      $("#editCancel").onclick=()=>{editId=null;render();};
+    }
+    panel.querySelectorAll("[data-eopen]").forEach(b=>b.onclick=()=>{editId=b.dataset.eopen;render();});
+    $("#addForm").onsubmit=e=>{
+      e.preventDefault();
+      if(editing){new FormData(e.target).forEach((v,k)=>editing[k]=v);editId=null;}
+      else{const item={id:crypto.randomUUID()};new FormData(e.target).forEach((v,k)=>item[k]=v);list.unshift(item);}
+      save();render();
+    };
+    if(tracker==="meals") attachUsda(panel);
+  }
+
+  panel.querySelectorAll(".del").forEach(btn=>{
+    if(btn.dataset.px!==undefined)return; // finance preview rows handle their own ✕
+    btn.onclick=async()=>{
+      const id=btn.closest("li").dataset.id;
+      const arr=data.sections[person][tracker];
+      const idx=arr.findIndex(x=>x.id===id);
+      if(idx<0)return;
+      if(tracker==="docs"){
+        if(!confirm("Delete this document from Google Drive? This cannot be undone."))return;
+        await deleteDoc(arr[idx]);
+        arr.splice(idx,1);
+      }else{
+        const del=arr.splice(idx,1)[0];
+        offerUndo(del.title||del.name||"item",arr,del,idx);
+      }
+      if(editId===id)editId=null;
+      save();render();
+    };
+  });
+}
+
+$$(".people button").forEach(b=>b.onclick=()=>{person=b.dataset.p;editId=null;movDetail=null;travDetail=null;foodDetail=null;render();});
+$$(".trackers button").forEach(b=>b.onclick=()=>{tracker=b.dataset.t;editId=null;movDetail=null;travDetail=null;foodDetail=null;render();});
+
+/* ---------- dark mode toggle (remembered on this device) ---------- */
+function applyTheme(){
+  const dark=localStorage.getItem("ad_theme")==="dark";
+  document.body.classList.toggle("dark",dark);
+  const b=$("#themeBtn");
+  if(b)b.textContent=dark?"☀️ Light":"🌙 Dark";
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.content=dark?"#191221":"#F6F2F7";
+}
+$("#themeBtn").onclick=()=>{
+  localStorage.setItem("ad_theme",localStorage.getItem("ad_theme")==="dark"?"light":"dark");
+  applyTheme();
+};
+applyTheme();
+
+/* undo + backup buttons */
+$("#undoBtn").onclick=()=>{
+  if(!undoInfo)return;
+  const {list,item,idx,key}=undoInfo;
+  list.splice(Math.min(idx,list.length),0,item);
+  if(key)dirty.add(key);
+  undoInfo=null;$("#undoBar").classList.remove("show");clearTimeout(undoTimer);
+  save();render();
+};
+$("#backupBtn").onclick=()=>{
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
+  a.download="abode-backup-"+today()+".json";
+  a.click();URL.revokeObjectURL(a.href);
+  setStatus("Backup downloaded ✓","saved");
+};
+</script>
+</body>
+</html>
