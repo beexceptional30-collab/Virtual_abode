@@ -103,7 +103,7 @@ input,select{
   border-radius:10px;background:var(--paper);color:var(--ink);width:100%;
 }
 input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
-.addrow button{background:var(--accent);color:#fff;padding:11px;border-radius:10px}
+.addrow button[type=submit]{background:var(--accent);color:#fff;padding:11px;border-radius:10px}
 ul.items{list-style:none}
 ul.items li{
   display:flex;align-items:center;gap:10px;padding:11px 2px;
@@ -198,6 +198,16 @@ body.dark{
 body.dark .overlay{background:rgba(0,0,0,.6)}
 body.dark .suglist{box-shadow:0 10px 26px rgba(0,0,0,.5)}
 body.dark{color-scheme:dark}
+/* profile picker (Netflix-style) */
+.picker{padding:30px 0 36px;text-align:center}
+.pickrow{display:flex;gap:20px;justify-content:center;margin:20px 0 26px}
+.pick{background:none;text-align:center;padding:0}
+.pick .av{width:88px;height:88px;border-radius:26px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:42px;color:#fff;margin:0 auto 9px;box-shadow:0 8px 20px rgba(51,36,60,.20);transition:transform .15s}
+.pick:active .av{transform:scale(.93)}
+.pick .pname{font-weight:700;font-size:15px;color:var(--ink)}
+.homecard{display:inline-block;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:12px 22px;font-size:14px;font-weight:600;color:var(--ink)}
+.profbar{display:flex;align-items:center;gap:10px;background:none;margin:0 0 12px;padding:0;font-size:17px;font-weight:700;color:var(--ink);font-family:'Karla',sans-serif}
+.avmini{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Instrument Serif',serif;font-size:18px;flex:none}
 body.dark .pri-High{color:#F2A5B9}body.dark .pri-Medium{color:#EFCB8B}body.dark .pri-Low{color:#96D6CC}
 /* star picker + inline chips */
 .starrow{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
@@ -279,12 +289,11 @@ footer{display:flex;gap:8px;justify-content:center;margin-top:18px}
 
 <!-- Main app -->
 <div id="appView" class="hidden">
-  <div class="people" role="tablist" aria-label="Whose section">
-    <button data-p="home" role="tab">Home</button>
-    <button data-p="adi" role="tab">Adi</button>
-    <button data-p="devanshi" role="tab">Devanshi</button>
-    <button data-p="us" class="active" role="tab">Us</button>
-  </div>
+  <button id="profBtn" class="profbar hidden">
+    <span class="avmini" id="avMini">D</span>
+    <span id="avName">Devanshi</span>
+    <span style="color:var(--ink-soft);font-size:12px;font-weight:600">· switch</span>
+  </button>
 
   <div class="trackers" role="tablist" aria-label="Tracker">
     <button data-t="movies" class="active">Movies</button>
@@ -351,7 +360,7 @@ let subFolders={adi:null,devanshi:null,us:null};
 let fileIds={adi:{},devanshi:{},us:{}};
 const TRACKS=()=>Object.keys(blank());
 const dkey=(p,t)=>p+"/"+t;
-let person="us", tracker="movies", saveTimer=null;
+let person=null, tracker="movies", saveTimer=null;
 let movStatus="watched", movFilter="all", movBulk=false, sugT=null;
 let movView="shelves", movRegion="all", movDetail=null;
 let movRate=3, movProg="finished", movAddDate="";
@@ -418,7 +427,7 @@ $("#signInBtn").onclick=()=>{
 };
 $("#signOutBtn").onclick=()=>{
   if(token) google.accounts.oauth2.revoke(token,()=>{});
-  token=null;try{localStorage.removeItem("gd_tok");}catch(e){}$("#appView").classList.add("hidden");$("#authView").classList.remove("hidden");
+  token=null;person=null;try{localStorage.removeItem("gd_tok");}catch(e){}$("#appView").classList.add("hidden");$("#authView").classList.remove("hidden");
   setStatus("");
 };
 
@@ -1285,16 +1294,41 @@ function renderHub(panel){
     ${(!cel&&!meals.length&&!pick)?`<div class="empty">Add celebrations, meal plans and watchlist films — they’ll gather here.</div>`:""}`;
 }
 
+const AV={home:["🏠","Home","var(--us)"],adi:["A","Adi","var(--adi)"],devanshi:["D","Devanshi","var(--dev)"],us:["♥","Us","var(--us)"]};
+function renderPicker(panel){
+  panel.innerHTML=`<div class="picker">
+    <h2 class="serif" style="font-size:26px">Who’s tracking?</h2>
+    <div class="pickrow">
+      ${["adi","devanshi","us"].map(id=>`
+        <button class="pick" data-pick="${id}">
+          <span class="av" style="background:${AV[id][2]}">${AV[id][0]}</span>
+          <span class="pname">${AV[id][1]}</span>
+        </button>`).join("")}
+    </div>
+    <button class="homecard" data-pick="home">🏠&nbsp; Our home — everything at a glance</button>
+  </div>`;
+  panel.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{person=b.dataset.pick;render();});
+}
 function render(){
+  const panelEl=$("#panel"), bar=$("#profBtn"), tr=$(".trackers");
+  if(!person){
+    document.documentElement.style.setProperty("--accent","var(--us)");
+    document.documentElement.style.setProperty("--accent-soft","var(--us-soft)");
+    bar.classList.add("hidden");tr.style.display="none";
+    renderPicker(panelEl);return;
+  }
   const [c,cs]=hue[person];
   document.documentElement.style.setProperty("--accent",`var(${c})`);
   document.documentElement.style.setProperty("--accent-soft",`var(${cs})`);
-  $$(".people button").forEach(b=>b.classList.toggle("active",b.dataset.p===person));
+  bar.classList.remove("hidden");
+  $("#avMini").textContent=AV[person][0];
+  $("#avMini").style.background=AV[person][2];
+  $("#avName").textContent=AV[person][1];
   $$(".trackers button").forEach(b=>b.classList.toggle("active",b.dataset.t===tracker));
-  $(".trackers").style.display = person==="home" ? "none" : "flex";
-  if(person==="home"){renderHub($("#panel"));return;}
+  tr.style.display = person==="home" ? "none" : "flex";
+  if(person==="home"){renderHub(panelEl);return;}
 
-  const d=defs[tracker], list=data.sections[person][tracker], panel=$("#panel");
+  const d=defs[tracker], list=data.sections[person][tracker], panel=panelEl;
 
   if(tracker==="movies"){
     renderMovies(panel,list);
@@ -1379,7 +1413,7 @@ function render(){
   });
 }
 
-$$(".people button").forEach(b=>b.onclick=()=>{person=b.dataset.p;editId=null;movDetail=null;travDetail=null;foodDetail=null;render();});
+$("#profBtn").onclick=()=>{person=null;editId=null;movDetail=null;travDetail=null;foodDetail=null;render();};
 $$(".trackers button").forEach(b=>b.onclick=()=>{tracker=b.dataset.t;editId=null;movDetail=null;travDetail=null;foodDetail=null;render();});
 
 /* ---------- dark mode toggle (remembered on this device) ---------- */
